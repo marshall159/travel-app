@@ -18,6 +18,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/', function (req, res) {
+    console.log('Request to POST /');
     res.json(mockAPIResponse);
 });
 

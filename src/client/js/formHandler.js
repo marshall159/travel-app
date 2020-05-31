@@ -28,10 +28,12 @@ async function handleSubmit(event) {
         },
         redirect: 'follow', 
         referrerPolicy: 'no-referrer',
-        body: JSON.stringify(event.target)}
+        body: JSON.stringify({ "data": 123 })}
     );
 
-    document.getElementById('results').innerHTML = response;
+    const res = await response.json();
+
+    document.getElementById('results').innerHTML = JSON.stringify(res);
 
     // const response = await postData(
     //     'http://localhost:8082/aylien', { url }
