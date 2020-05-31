@@ -10,5 +10,5 @@ import './styles/header.scss';
 export {
     // isValidURL,
     handleSubmit,
-    fetchCityDetails
+    fetchCityDetails,
 }

@@ -15,6 +15,17 @@
 //     return response.json();
 // }
 
+function countdown(dateString) {
+    // 2021-10-31
+    const tripDate = new Date(dateString);
+    const currentTime = Date.now();
+    const timeInMs = tripDate - currentTime;
+
+    const daysAway = Math.round(timeInMs / (1000 * 60 * 60 * 24));
+
+    return daysAway;
+}
+
 function mapRelevantCityDetails(json) {
     // latitude, longitude, country
 
@@ -46,22 +57,31 @@ async function fetchCityDetails(city) {
 async function handleSubmit(event) {
     event.preventDefault();
 
-    const response = await fetch('http://localhost:8082', {
-        method: 'POST',
-        mode: 'cors', 
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        redirect: 'follow', 
-        referrerPolicy: 'no-referrer',
-        body: JSON.stringify({ "data": 123 })}
-    );
+    const city = document.getElementById('location').value;
 
-    const res = await response.json();
+    const dateString = document.querySelector('input[type="date"]').value;
+    const daysAway = countdown(dateString);
+
+
+    const res = await fetchCityDetails(city);
+
+    // const response = await fetch('http://localhost:8082', {
+    //     method: 'POST',
+    //     mode: 'cors', 
+    //     cache: 'no-cache',
+    //     credentials: 'same-origin',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     redirect: 'follow', 
+    //     referrerPolicy: 'no-referrer',
+    //     body: JSON.stringify({ "data": 123 })}
+    // );
+
+    // const res = await response.json();
 
     document.getElementById('results').innerHTML = JSON.stringify(res);
+    document.getElementById('date-result').innerHTML = `Trip is ${daysAway} days away`;
 
     // const response = await postData(
     //     'http://localhost:8082/aylien', { url }

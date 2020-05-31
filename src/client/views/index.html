@@ -17,7 +17,15 @@
     <main>
         <section>
             <form class="" onsubmit="return Client.handleSubmit(event)">
-                <input id="name" type="text" name="input" value="" placeholder="Name">
+                <label>
+                    My trip to: 
+                    <input id="location" type="text" name="input" value="" placeholder="Enter Location">
+                </label>
+                <!-- Departing: <input id="date" type="text" name="input" value="" placeholder="DD/MM/YYYY"> -->
+                <label>
+                    Departing:
+                    <input type="date" id="date" name="departing">
+                </label>
                 <input type="submit" name="" value="submit" onsubmit="return Client.handleSubmit(event)">
             </form>
             <section>
@@ -25,6 +33,7 @@
                 <section>
                     <strong>Form Results:</strong>
                     <div id="results"></div>
+                    <div id="date-result"></div>
                 </section>
     </main>
 
