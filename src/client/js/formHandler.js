@@ -15,6 +15,34 @@
 //     return response.json();
 // }
 
+function mapRelevantCityDetails(json) {
+    // latitude, longitude, country
+
+    const { lat, lng, countryName } = json.geonames[0];
+
+    return {
+        lat, 
+        lng, 
+        countryName
+    }
+}
+
+async function fetchCityDetails(city) {
+    const BASE_API_PATH = `http://api.geonames.org/searchJSON`;
+    const query = `?q=${city}&username=marshall159`;
+    const url = BASE_API_PATH + query;
+
+    const response = await fetch(url);
+
+    try {
+        const json = await response.json();
+        return mapRelevantCityDetails(json);
+        // return json;
+    } catch (err) {
+        console.error(`Error: ${err.message}`);
+    }
+}
+
 async function handleSubmit(event) {
     event.preventDefault();
 
@@ -56,4 +84,7 @@ async function handleSubmit(event) {
     // }
 }
 
-export { handleSubmit }
+export { 
+    handleSubmit, 
+    fetchCityDetails
+}

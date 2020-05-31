@@ -1,5 +1,5 @@
 // import { isValidURL } from './js/isValidURL'
-import { handleSubmit } from './js/formHandler'
+import { handleSubmit, fetchCityDetails } from './js/formHandler'
 
 import './styles/resets.scss';
 import './styles/base.scss';
@@ -9,5 +9,6 @@ import './styles/header.scss';
 
 export {
     // isValidURL,
-    handleSubmit
+    handleSubmit,
+    fetchCityDetails
 }
