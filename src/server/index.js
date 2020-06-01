@@ -8,6 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const WEATHERBIT_API = process.env.WEATHERBIT_API || '';
+const PIXABAY_API = process.env.PIXABAY_API || '';
 
 const app = express();
 
@@ -38,6 +39,21 @@ app.get('/weather/:lat/:lon', async (req, res) => {
     } catch (err) {
         console.error(`Error: ${err.message}`);
     }
+});
+
+app.get('/image/:city', async (req, res) => {
+    const { city } = req.params;
+    
+    const BASE_API_PATH = `https://pixabay.com/api/`;
+    const url = BASE_API_PATH + `?key=${PIXABAY_API}` + `&q=${city}`;
+
+    try {
+        const response = await fetch(url);
+        const json = await response.json();
+        return res.json(json);
+    } catch (err) {
+        console.error(`Error: ${err.message}`);
+    } 
 });
 
 app.listen(PORT, function () {

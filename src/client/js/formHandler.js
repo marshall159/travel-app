@@ -38,6 +38,24 @@ function mapRelevantCityDetails(json) {
     }
 }
 
+async function fetchImageUrl(cityName) {
+    const param = encodeURIComponent(cityName);
+    const url = `http://localhost:8082`;
+    const query = `/image/${param}`;
+
+    try {
+        const response = await fetch(url + query);
+        const json = await response.json();
+        const imageUrl = json.hits[0].largeImageURL;
+  
+        //  "https://pixabay.com/get/52e5d2444b55ae14f6da8c7dda7936781d3ed7e253506c4870267ad4974fc35bba_1280.jpg"
+        return imageUrl;
+      
+    } catch (err) {
+        console.error(`Error: ${err.message}`);
+    }
+}
+
 async function fetchWeatherBitData(latitude, longitude, numDays) {
     if (numDays > 15) return { "description": "Forecast date is too far away" }
     // TODO: Have number of days calculation done server side instead of client side
@@ -138,9 +156,10 @@ async function handleSubmit(event) {
     const dateString = document.querySelector('input[type="date"]').value;
     const daysAway = countdown(dateString);
 
-
+    // Wrap non-dependent calls in Promise.all to run in parallel?
     const latitudeLongitudeDetails = await fetchCityDetails(city);
     const weatherDetails = await fetchWeatherBitData(latitudeLongitudeDetails.lat, latitudeLongitudeDetails.lng, daysAway);
+    const cityImageUrl = await fetchImageUrl(weatherDetails.city_name);
 
     // const response = await fetch('http://localhost:8082', {
     //     method: 'POST',
@@ -159,6 +178,7 @@ async function handleSubmit(event) {
 
     document.getElementById('results').innerHTML = JSON.stringify(weatherDetails);
     document.getElementById('date-result').innerHTML = `Trip is ${daysAway} days away`;
+    document.getElementById('image').innerHTML = `<img src=${cityImageUrl}>`;
 
     // const response = await postData(
     //     'http://localhost:8082/aylien', { url }
