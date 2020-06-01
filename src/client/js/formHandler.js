@@ -115,6 +115,7 @@ async function fetchWeatherBitData(latitude, longitude, numDays) {
         return {
             city_name: json.city_name,
             description: json.data[numDays].weather.description,
+            icon: json.data[numDays].weather.icon,
             high_temp: json.data[numDays].high_temp,
             low_temp: json.data[numDays].low_temp,
         }
@@ -177,6 +178,8 @@ async function handleSubmit(event) {
     // const res = await response.json();
 
     document.getElementById('results').innerHTML = JSON.stringify(weatherDetails);
+    // https://www.weatherbit.io/static/img/icons/{icon_code}.png
+    document.getElementById('icon').innerHTML = `<img src=https://www.weatherbit.io/static/img/icons/${weatherDetails.icon}.png>`;
     document.getElementById('date-result').innerHTML = `Trip is ${daysAway} days away`;
     document.getElementById('image').innerHTML = `<img src=${cityImageUrl}>`;
 
