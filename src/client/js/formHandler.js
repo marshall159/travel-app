@@ -38,17 +38,93 @@ function mapRelevantCityDetails(json) {
     }
 }
 
+async function fetchWeatherBitData(latitude, longitude, numDays) {
+    if (numDays > 15) return { "description": "Forecast date is too far away" }
+    // TODO: Have number of days calculation done server side instead of client side
+    const url = `http://localhost:8082`;
+    const query = `/weather/${latitude}/${longitude}`;
+
+    try {
+        const response = await fetch(url + query);
+        const json = await response.json();
+        // Response
+        // {
+        //     city_name: "Haywards Heath"
+        //     country_code: "GB"
+        //     data: (16) [{app_max_temp: 21.6
+        //         app_min_temp: 12.1
+        //         clouds: 5
+        //         clouds_hi: 0
+        //         clouds_low: 5
+        //         clouds_mid: 0
+        //         datetime: "2020-05-31"
+        //         dewpt: 6.7
+        //         high_temp: 20.7
+        //         low_temp: 10.8
+        //         max_dhi: null
+        //         max_temp: 22.4
+        //         min_temp: 12.1
+        //         moon_phase: 0.718711
+        //         moon_phase_lunation: 0.3
+        //         moonrise_ts: 1590930161
+        //         moonset_ts: 1590890553
+        //         ozone: 339.744
+        //         pop: 0
+        //         precip: 0
+        //         pres: 1014.52
+        //         rh: 47
+        //         slp: 1021.78
+        //         snow: 0
+        //         snow_depth: 0
+        //         sunrise_ts: 1590897359
+        //         sunset_ts: 1590955210
+        //         temp: 18.9
+        //         ts: 1590879660
+        //         uv: 4.10625
+        //         valid_date: "2020-05-31"
+        //         vis: 0
+        //         weather: {icon: "c02d", code: 801, description: "Few clouds"}
+        //         wind_cdir: "ENE"
+        //         wind_cdir_full: "east-northeast"
+        //         wind_dir: 69
+        //         wind_gust_spd: 12.1437
+        //         wind_spd: 5.96689}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+        //     lat: 51
+        //     lon: -0.12
+        //     state_code: "ENG"
+        //     timezone: "Europe/London"
+        // }
+        return {
+            city_name: json.city_name,
+            description: json.data[numDays].weather.description,
+            high_temp: json.data[numDays].high_temp,
+            low_temp: json.data[numDays].low_temp,
+        }
+        // {
+        //     "city_name": "London", 
+        //     "description": "Overcast clouds"
+        // }
+    } catch (err) {
+        console.error(`Error: ${err.message}`);
+    }
+
+}
+
 async function fetchCityDetails(city) {
     const BASE_API_PATH = `http://api.geonames.org/searchJSON`;
     const query = `?q=${city}&username=marshall159`;
     const url = BASE_API_PATH + query;
 
-    const response = await fetch(url);
-
     try {
+        const response = await fetch(url);
         const json = await response.json();
         return mapRelevantCityDetails(json);
-        // return json;
+        // return value Object London:
+        // {
+        //     countryName: "United Kingdom"
+        //     lat: "51.50853"
+        //     lng: "-0.12574"
+        // }
     } catch (err) {
         console.error(`Error: ${err.message}`);
     }
@@ -63,7 +139,8 @@ async function handleSubmit(event) {
     const daysAway = countdown(dateString);
 
 
-    const res = await fetchCityDetails(city);
+    const latitudeLongitudeDetails = await fetchCityDetails(city);
+    const weatherDetails = await fetchWeatherBitData(latitudeLongitudeDetails.lat, latitudeLongitudeDetails.lng, daysAway);
 
     // const response = await fetch('http://localhost:8082', {
     //     method: 'POST',
@@ -80,7 +157,7 @@ async function handleSubmit(event) {
 
     // const res = await response.json();
 
-    document.getElementById('results').innerHTML = JSON.stringify(res);
+    document.getElementById('results').innerHTML = JSON.stringify(weatherDetails);
     document.getElementById('date-result').innerHTML = `Trip is ${daysAway} days away`;
 
     // const response = await postData(
@@ -106,5 +183,6 @@ async function handleSubmit(event) {
 
 export { 
     handleSubmit, 
-    fetchCityDetails
+    fetchCityDetails,
+    fetchWeatherBitData
 }
