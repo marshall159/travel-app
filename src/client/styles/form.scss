@@ -3,6 +3,12 @@ form {
     border-radius: 3px;
     padding: 40px;
     // border: 1px solid red;
+
+    &:hover {
+        background: #333;
+        color: #fff;
+        transition: ease 0.7s all;
+    }
 }
 
 input {
