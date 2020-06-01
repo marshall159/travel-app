@@ -85,13 +85,19 @@ async function handleSubmit(event) {
 
     // Wrap non-dependent calls in Promise.all to run in parallel?
     const latitudeLongitudeDetails = await fetchCityDetails(city);
+    // return example format: {"city_name":"London","description":"Overcast clouds","icon":"c04d","high_temp":16.3,"low_temp":10.3}
     const weatherDetails = await fetchWeatherBitData(latitudeLongitudeDetails.lat, latitudeLongitudeDetails.lng, daysAway);
     const cityImageUrl = await fetchImageUrl(weatherDetails.city_name);
 
-    document.getElementById('date-result').innerHTML = `${weatherDetails.city_name} is ${daysAway} days away`;
-    document.getElementById('results').innerHTML = JSON.stringify(weatherDetails);
+    document.getElementById('date-result').innerHTML = `<h3>${weatherDetails.city_name} is ${daysAway} days away</h3>`;
+    // document.getElementById('results').innerHTML = JSON.stringify(weatherDetails);
     // Icon URL example: https://www.weatherbit.io/static/img/icons/{icon_code}.png
-    document.getElementById('icon').innerHTML = `<img src=https://www.weatherbit.io/static/img/icons/${weatherDetails.icon}.png>`;
+    document.getElementById('results').innerHTML = `
+        <h3>Typical weather for then is:</h3>
+        <p>High: ${weatherDetails.high_temp}, Low: ${weatherDetails.low_temp}</p>
+        <p>${weatherDetails.description}</p>
+        <div><img src=https://www.weatherbit.io/static/img/icons/${weatherDetails.icon}.png></div>
+    `;
     document.getElementById('image').innerHTML = `<img src=${cityImageUrl}>`;
 }
 
