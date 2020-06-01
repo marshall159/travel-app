@@ -1,6 +1,4 @@
-var path = require('path');
 const express = require('express');
-const mockAPIResponse = require('./mockAPI.js');
 const dotenv = require('dotenv');
 dotenv.config();
 const PORT = process.env.PORT || 8082;
@@ -18,11 +16,6 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
     res.sendFile('dist/index.html');
-});
-
-app.post('/', function (req, res) {
-    console.log('Request to POST /');
-    res.json(mockAPIResponse);
 });
 
 app.get('/weather/:lat/:lon', async (req, res) => {
